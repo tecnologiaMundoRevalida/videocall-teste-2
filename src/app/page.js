@@ -25,11 +25,11 @@ export default function Home() {
         const peerConnection = new RTCPeerConnection(
           {
             iceServers: [
-              // {
-              //   urls: "stun:stun.l.google.com:19302"
-              // },
               {
-                urls: "turn:44.196.233.187:3478",
+                urls: "stun:stun.l.google.com:19302"
+              },
+              {
+                urls: "turn:44.196.233.187:3478?transport=tcp",
                 username: "mundorevalida",
                 credential: "mundorevalida2023"
               }
@@ -50,10 +50,13 @@ export default function Home() {
         socketRef.current.on('offerReceived', (offer) => {
           peerConnection.setRemoteDescription(new RTCSessionDescription(offer));
             peerConnection.createAnswer()
-            .then((answer) => peerConnection.setLocalDescription(answer))
-            .then(() => {
-              socketRef.current.emit('answer', {answer:peerConnection.localDescription,room:'20'});
+            .then((answer) => {
+              peerConnection.setLocalDescription(answer)
+              socketRef.current.emit('answer', {answer:answer,room:'20'});
             });
+            // .then((answer) => {
+              
+            // });
             // peerConnection.setLocalDescription(new RTCSessionDescription(peerConnection.localDescription));
         });
         
